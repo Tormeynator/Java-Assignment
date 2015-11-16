@@ -1,6 +1,8 @@
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -9,12 +11,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class GUI extends JFrame //implements ActionListener
+public class GUI extends JFrame implements ActionListener
 {
 	private JLabel title = new JLabel("D&D Character Generator");
-	
+	String[] rollString = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"};  
 	private JLabel nameText = new JLabel("Name ");
 	private JTextField nameField = new JTextField();
+	
 	private JLabel raceText = new JLabel("Race ");
 	String[] raceString = {"Human", "Elf", "Dwarf", "Halfling", "Half Elf", "Half Orc", "Gnome"};
 	private JComboBox raceBox = new JComboBox(raceString);
@@ -54,6 +57,7 @@ public class GUI extends JFrame //implements ActionListener
 	public GUI()
 	{
 	    super("Create Character");
+	    
 	    titlePanel.add(title);
 	    charPanel.add(nameText);
 	    charPanel.add(nameField);
@@ -82,13 +86,14 @@ public class GUI extends JFrame //implements ActionListener
 	    rollPanel.add(charismaField);
 	    rollPanel.add(charismaRoll);
 	    buttonPanel.add(createButton);
+	    
 	    charPanel.setLayout(new GridLayout(4,2));
 	    rollPanel.setLayout(new GridLayout(6,3));
+	   
 	    getContentPane().add(titlePanel);
 	    getContentPane().add(charPanel);
 	    getContentPane().add(buttonPanel);
 	    getContentPane().add(rollPanel);
-	    //theOKButton.addActionListener(this);
 	    
 	    strengthField.setEditable(false);
 	    dexterityField.setEditable(false);
@@ -97,11 +102,94 @@ public class GUI extends JFrame //implements ActionListener
 	    wisdomField.setEditable(false);
 	    charismaField.setEditable(false);
 	    
+	    strengthRoll.addActionListener(this);
+	    dexterityRoll.addActionListener(this);
+	    constitutionRoll.addActionListener(this);
+	    intelligenceRoll.addActionListener(this);
+	    wisdomRoll.addActionListener(this);
+	    charismaRoll.addActionListener(this);
+	    
 	    add(titlePanel,BorderLayout.NORTH);
 	    add(charPanel,BorderLayout.EAST);
 	    add(charPanel,BorderLayout.WEST);
 	    add(buttonPanel,BorderLayout.SOUTH);
 
+	}
+	
+	public void actionPerformed(ActionEvent e) 
+	{
+		if(e.getSource().equals(strengthRoll))
+		{
+			try
+			{
+				Random rand = new Random();
+	            strengthField.setText(rollString [rand.nextInt( rollString.length)]);
+			}
+			catch(Exception aException)
+			{
+		        aException.printStackTrace();
+			}
+		}
+		else if(e.getSource().equals(dexterityRoll))
+		{
+			try
+			{
+				Random rand = new Random();
+	            dexterityField.setText(rollString [rand.nextInt( rollString.length)]);
+			}
+			catch(Exception aException)
+			{
+		        aException.printStackTrace();
+			}
+		}
+		else if(e.getSource().equals(constitutionRoll))
+		{
+			try
+			{
+				Random rand = new Random();
+	            constitutionField.setText(rollString [rand.nextInt( rollString.length)]);
+			}
+			catch(Exception aException)
+			{
+		        aException.printStackTrace();
+			}
+		}
+		else if(e.getSource().equals(intelligenceRoll))
+		{
+			try
+			{
+				Random rand = new Random();
+	            intelligenceField.setText(rollString [rand.nextInt( rollString.length)]);
+			}
+			catch(Exception aException)
+			{
+		        aException.printStackTrace();
+			}
+		}
+		else if(e.getSource().equals(wisdomRoll))
+		{
+			try
+			{
+				Random rand = new Random();
+	            wisdomField.setText(rollString [rand.nextInt( rollString.length)]);
+			}
+			catch(Exception aException)
+			{
+		        aException.printStackTrace();
+			}
+		}
+		else if(e.getSource().equals(charismaRoll))
+		{
+			try
+			{
+				Random rand = new Random();
+	            charismaField.setText(rollString [rand.nextInt( rollString.length)]);
+			}
+			catch(Exception aException)
+			{
+		        aException.printStackTrace();
+			}
+		}
 	}
 	
 	public static void main(String[] args)
