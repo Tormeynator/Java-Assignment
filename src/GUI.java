@@ -3,11 +3,13 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
+import java.rmi.Naming;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -53,66 +55,77 @@ public class GUI extends JFrame implements ActionListener
 	private JPanel rollPanel = new JPanel();
 	private JPanel buttonPanel = new JPanel();
 	
+	private String theURL = "rmi:///";
+	private CharInterface theFactory;
+
 	
 	public GUI()
 	{
 	    super("Create Character");
-	    
-	    titlePanel.add(title);
-	    charPanel.add(nameText);
-	    charPanel.add(nameField);
-	    charPanel.add(raceText);
-	    charPanel.add(raceBox);
-	    charPanel.add(classText);
-	    charPanel.add(classBox);
-	    charPanel.add(allignmentText);
-	    charPanel.add(allignmentBox);
-	    rollPanel.add(strengthText);
-	    rollPanel.add(strengthField);
-	    rollPanel.add(strengthRoll);
-	    rollPanel.add(dexterityText);
-	    rollPanel.add(dexterityField);
-	    rollPanel.add(dexterityRoll);
-	    rollPanel.add(constitutionText);
-	    rollPanel.add(constitutionField);
-	    rollPanel.add(constitutionRoll);
-	    rollPanel.add(intelligenceText);
-	    rollPanel.add(intelligenceField);
-	    rollPanel.add(intelligenceRoll);
-	    rollPanel.add(wisdomText);
-	    rollPanel.add(wisdomField);
-	    rollPanel.add(wisdomRoll);
-	    rollPanel.add(charismaText);
-	    rollPanel.add(charismaField);
-	    rollPanel.add(charismaRoll);
-	    buttonPanel.add(createButton);
-	    
-	    charPanel.setLayout(new GridLayout(4,2));
-	    rollPanel.setLayout(new GridLayout(6,3));
-	   
-	    getContentPane().add(titlePanel);
-	    getContentPane().add(charPanel);
-	    getContentPane().add(buttonPanel);
-	    getContentPane().add(rollPanel);
-	    
-	    strengthField.setEditable(false);
-	    dexterityField.setEditable(false);
-	    constitutionField.setEditable(false);
-	    intelligenceField.setEditable(false);
-	    wisdomField.setEditable(false);
-	    charismaField.setEditable(false);
-	    
-	    strengthRoll.addActionListener(this);
-	    dexterityRoll.addActionListener(this);
-	    constitutionRoll.addActionListener(this);
-	    intelligenceRoll.addActionListener(this);
-	    wisdomRoll.addActionListener(this);
-	    charismaRoll.addActionListener(this);
-	    
-	    add(titlePanel,BorderLayout.NORTH);
-	    add(charPanel,BorderLayout.EAST);
-	    add(charPanel,BorderLayout.WEST);
-	    add(buttonPanel,BorderLayout.SOUTH);
+	    try
+	    {
+		    titlePanel.add(title);
+		    charPanel.add(nameText);
+		    charPanel.add(nameField);
+		    charPanel.add(raceText);
+		    charPanel.add(raceBox);
+		    charPanel.add(classText);
+		    charPanel.add(classBox);
+		    charPanel.add(allignmentText);
+		    charPanel.add(allignmentBox);
+		    rollPanel.add(strengthText);
+		    rollPanel.add(strengthField);
+		    rollPanel.add(strengthRoll);
+		    rollPanel.add(dexterityText);
+		    rollPanel.add(dexterityField);
+		    rollPanel.add(dexterityRoll);
+		    rollPanel.add(constitutionText);
+		    rollPanel.add(constitutionField);
+		    rollPanel.add(constitutionRoll);
+		    rollPanel.add(intelligenceText);
+		    rollPanel.add(intelligenceField);
+		    rollPanel.add(intelligenceRoll);
+		    rollPanel.add(wisdomText);
+		    rollPanel.add(wisdomField);
+		    rollPanel.add(wisdomRoll);
+		    rollPanel.add(charismaText);
+		    rollPanel.add(charismaField);
+		    rollPanel.add(charismaRoll);
+		    buttonPanel.add(createButton);
+		    
+		    charPanel.setLayout(new GridLayout(4,2));
+		    rollPanel.setLayout(new GridLayout(6,3));
+		   
+		    getContentPane().add(titlePanel);
+		    getContentPane().add(charPanel);
+		    getContentPane().add(buttonPanel);
+		    getContentPane().add(rollPanel);
+		    
+		    strengthField.setEditable(false);
+		    dexterityField.setEditable(false);
+		    constitutionField.setEditable(false);
+		    intelligenceField.setEditable(false);
+		    wisdomField.setEditable(false);
+		    charismaField.setEditable(false);
+		    
+		    strengthRoll.addActionListener(this);
+		    dexterityRoll.addActionListener(this);
+		    constitutionRoll.addActionListener(this);
+		    intelligenceRoll.addActionListener(this);
+		    wisdomRoll.addActionListener(this);
+		    charismaRoll.addActionListener(this);
+		    createButton.addActionListener(this);
+		    
+		    add(titlePanel,BorderLayout.NORTH);
+		    add(charPanel,BorderLayout.EAST);
+		    add(charPanel,BorderLayout.WEST);
+		    add(buttonPanel,BorderLayout.SOUTH);
+		    
+		    theFactory  = (CharInterface)Naming.lookup(theURL+"factory");
+	    }
+	    catch(Exception aException){
+	        aException.printStackTrace();
+	      }
 
 	}
 	
@@ -184,6 +197,29 @@ public class GUI extends JFrame implements ActionListener
 			{
 				Random rand = new Random();
 	            charismaField.setText(rollString [rand.nextInt( rollString.length)]);
+			}
+			catch(Exception aException)
+			{
+		        aException.printStackTrace();
+			}
+		}
+		else if(e.getSource().equals(createButton))
+		{
+			try
+			{
+				String aName = nameField.getText();
+				String aRace = (String)raceBox.getSelectedItem();
+				String aClass = (String)classBox.getSelectedItem();
+				String aAllignment = (String)allignmentBox.getSelectedItem();
+				String aStrength = strengthField.getText();
+				String aDexterity = dexterityField.getText();
+				String aConstitution = constitutionField.getText();
+				String aIntelligence = intelligenceField.getText();
+				String aWisdom = wisdomField.getText();
+				String aCharisma = charismaField.getText();
+				int aCharID = theFactory.createCharacter(aName, aRace, aClass, aAllignment, aStrength, aDexterity,
+						aConstitution, aIntelligence, aWisdom, aCharisma);
+				JOptionPane.showMessageDialog(new JFrame(),"Character "+ aCharID + " created.");
 			}
 			catch(Exception aException)
 			{
