@@ -3,7 +3,7 @@ import java.rmi.server.*;
 import java.io.*;
 
 
-public class Character 
+public class Character implements Serializable
 {
 	private String charName;
 	private String charRace;
@@ -29,5 +29,70 @@ public class Character
 		charIntelligence = aIntelligence;
 		charWisdom = aWisdom;
 		charCharisma = aCharisma;
+	}
+	
+	public String getName()
+	{
+		return charName;
+	}
+	
+	public String getRace()
+	{
+		return charRace;
+	}
+	
+	public String getCharClass()
+	{
+		return charClass;
+	}
+	
+	public String getAllignment()
+	{
+		return charAllignment;
+	}
+	
+	public String getStr()
+	{
+		return charStrength;
+	}
+	
+	public String getDex()
+	{
+		return charDexterity;
+	}
+	
+	public String getCon()
+	{
+		return charConstitution;
+	}
+	
+	public String getInt()
+	{
+		return charIntelligence;
+	}
+	
+	public String getWis()
+	{
+		return charWisdom;
+	}
+	
+	public String getCha()
+	{
+		return charCharisma;
+	}
+	
+	public void printDetails()
+	{
+		System.out.println("Name: " + charName);
+		System.out.println("Race: " + charRace);
+		System.out.println("Class: " + charClass);
+		System.out.println("Allignment: " + charAllignment);
+		System.out.println("Strength: " + charStrength);
+		System.out.println("Dexterity: " + charDexterity);
+		System.out.println("Constitution: " + charConstitution);
+		System.out.println("Intelligence: " + charIntelligence);
+		System.out.println("Wisdom: " + charWisdom);
+		System.out.println("Charisma: " + charCharisma);
+		
 	}
 }

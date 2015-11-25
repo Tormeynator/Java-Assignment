@@ -1,8 +1,14 @@
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.Vector;
 import java.rmi.Naming;
 
 import javax.swing.JButton;
@@ -11,12 +17,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 public class GUI extends JFrame implements ActionListener
 {
 	private JLabel title = new JLabel("D&D Character Generator");
-	String[] rollString = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"};  
+	String[] rollString = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"};
+	String[] columnNames = {"Name", "Race", "Class", "Allignment", "Str", "Dex", "Con", "Int", "Wis", "Cha"};
 	private JLabel nameText = new JLabel("Name ");
 	private JTextField nameField = new JTextField();
 	
@@ -32,28 +42,34 @@ public class GUI extends JFrame implements ActionListener
 	
 	private JLabel strengthText = new JLabel("Strength ");
 	private JTextField strengthField = new JTextField("1");
-	private JButton strengthRoll = new JButton("Roll");
+	private JButton strengthRoll = new JButton("Strength Roll");
 	private JLabel dexterityText = new JLabel("Dexterity ");
 	private JTextField dexterityField = new JTextField("1");
-	private JButton dexterityRoll = new JButton("Roll");
+	private JButton dexterityRoll = new JButton("Dexterity Roll");
 	private JLabel constitutionText = new JLabel("Constituion ");
 	private JTextField constitutionField = new JTextField("1");
-	private JButton constitutionRoll = new JButton("Roll");
+	private JButton constitutionRoll = new JButton("Constitution Roll");
 	private JLabel intelligenceText = new JLabel("Intelligence ");
 	private JTextField intelligenceField = new JTextField("1");
-	private JButton intelligenceRoll = new JButton("Roll");
+	private JButton intelligenceRoll = new JButton("Intelligence Roll");
 	private JLabel wisdomText = new JLabel("Wisdom ");
 	private JTextField wisdomField = new JTextField("1");
-	private JButton wisdomRoll = new JButton("Roll");
+	private JButton wisdomRoll = new JButton("Wisdom Roll");
 	private JLabel charismaText = new JLabel("Charisma ");
 	private JTextField charismaField = new JTextField("1");
-	private JButton charismaRoll = new JButton("Roll");
+	private JButton charismaRoll = new JButton("Charisma Roll");
 	
 	private JButton createButton = new JButton("Create Character");
+	private JLabel createText = new JLabel("---------------------------------");
+	private JButton resetButton = new JButton("Reset");
+	private JButton rollAllButton = new JButton("Roll All");
+	private JTextField searchField = new JTextField("Name of Char");
+	private JButton searchButton = new JButton("Search");
 	private JPanel titlePanel = new JPanel();
 	private JPanel charPanel = new JPanel();
 	private JPanel rollPanel = new JPanel();
 	private JPanel buttonPanel = new JPanel();
+
 	
 	private String theURL = "rmi:///";
 	private CharInterface theFactory;
@@ -73,29 +89,35 @@ public class GUI extends JFrame implements ActionListener
 		    charPanel.add(classBox);
 		    charPanel.add(allignmentText);
 		    charPanel.add(allignmentBox);
-		    rollPanel.add(strengthText);
+		    //charPanel.add(strengthText);
 		    rollPanel.add(strengthField);
 		    rollPanel.add(strengthRoll);
-		    rollPanel.add(dexterityText);
+		    //charPanel.add(dexterityText);
 		    rollPanel.add(dexterityField);
 		    rollPanel.add(dexterityRoll);
-		    rollPanel.add(constitutionText);
+		    //charPanel.add(constitutionText);
 		    rollPanel.add(constitutionField);
 		    rollPanel.add(constitutionRoll);
-		    rollPanel.add(intelligenceText);
+		    //charPanel.add(intelligenceText);
 		    rollPanel.add(intelligenceField);
 		    rollPanel.add(intelligenceRoll);
-		    rollPanel.add(wisdomText);
+		    //charPanel.add(wisdomText);
 		    rollPanel.add(wisdomField);
 		    rollPanel.add(wisdomRoll);
-		    rollPanel.add(charismaText);
+		    //charPanel.add(charismaText);
 		    rollPanel.add(charismaField);
 		    rollPanel.add(charismaRoll);
-		    buttonPanel.add(createButton);
+		    rollPanel.add(resetButton);
+		    rollPanel.add(rollAllButton);
+		    charPanel.add(createText);
+		    charPanel.add(createButton);
+		    charPanel.add(searchField);
+		    charPanel.add(searchButton);
 		    
-		    charPanel.setLayout(new GridLayout(4,2));
-		    rollPanel.setLayout(new GridLayout(6,3));
-		   
+		    charPanel.setLayout(new GridLayout(6,2));
+		    rollPanel.setLayout(new GridLayout(7,2));
+		    buttonPanel.setLayout(new GridLayout(4,8));
+		    
 		    getContentPane().add(titlePanel);
 		    getContentPane().add(charPanel);
 		    getContentPane().add(buttonPanel);
@@ -115,12 +137,16 @@ public class GUI extends JFrame implements ActionListener
 		    wisdomRoll.addActionListener(this);
 		    charismaRoll.addActionListener(this);
 		    createButton.addActionListener(this);
+		    resetButton.addActionListener(this);
+		    rollAllButton.addActionListener(this);
+		    searchButton.addActionListener(this);
+		    
 		    
 		    add(titlePanel,BorderLayout.NORTH);
-		    add(charPanel,BorderLayout.EAST);
+		    add(rollPanel,BorderLayout.EAST);
 		    add(charPanel,BorderLayout.WEST);
 		    add(buttonPanel,BorderLayout.SOUTH);
-		    
+		   
 		    theFactory  = (CharInterface)Naming.lookup(theURL+"factory");
 	    }
 	    catch(Exception aException){
@@ -203,6 +229,39 @@ public class GUI extends JFrame implements ActionListener
 		        aException.printStackTrace();
 			}
 		}
+		else if(e.getSource().equals(rollAllButton))
+		{
+			try
+			{
+				Random rand = new Random();
+				strengthField.setText(rollString [rand.nextInt( rollString.length)]);
+				dexterityField.setText(rollString [rand.nextInt( rollString.length)]);
+				constitutionField.setText(rollString [rand.nextInt( rollString.length)]);
+				intelligenceField.setText(rollString [rand.nextInt( rollString.length)]);
+				wisdomField.setText(rollString [rand.nextInt( rollString.length)]);
+	            charismaField.setText(rollString [rand.nextInt( rollString.length)]);
+			}
+			catch(Exception aException)
+			{
+		        aException.printStackTrace();
+			}
+		}
+		else if(e.getSource().equals(resetButton))
+		{
+			try
+			{
+				strengthField.setText("1");
+				dexterityField.setText("1");
+				constitutionField.setText("1");
+				intelligenceField.setText("1");
+				wisdomField.setText("1");
+	            charismaField.setText("1");
+			}
+			catch(Exception aException)
+			{
+		        aException.printStackTrace();
+			}
+		}
 		else if(e.getSource().equals(createButton))
 		{
 			try
@@ -226,12 +285,27 @@ public class GUI extends JFrame implements ActionListener
 		        aException.printStackTrace();
 			}
 		}
+		else if(e.getSource().equals(searchButton))
+		{
+			try
+			{
+				String charSearch = searchField.getText();
+				Character aName = theFactory.readName(charSearch);
+				JOptionPane.showMessageDialog(new JFrame(),"Character Name: "+ aName.getName());
+			}
+			catch(Exception aException)
+			{
+		        aException.printStackTrace();
+			}
+		}
+		
 	}
 	
 	public static void main(String[] args)
 	{
 		GUI aGUI = new GUI();
-		aGUI.setSize(450,300);
+		aGUI.setSize(532,300);
+		aGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		aGUI.setVisible(true);
 	}
 

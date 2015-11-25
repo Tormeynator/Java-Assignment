@@ -1,11 +1,11 @@
 import java.rmi.*;
 import java.rmi.server.*;
-import java.io.*;
+import java.util.HashMap;
 
 
-public class CharFactory extends UnicastRemoteObject implements CharInterface, Serializable
+public class CharFactory extends UnicastRemoteObject implements CharInterface
 {
-	private Character[] listOfChars = new Character[10];
+	private HashMap<String, Character> listOfChars = new HashMap();
 	private int numOfChars = 0;
 	
 	public CharFactory() throws RemoteException
@@ -19,9 +19,13 @@ public class CharFactory extends UnicastRemoteObject implements CharInterface, S
 		System.out.println("Creating a Character called "+aName);
 	    Character aCharacter = new Character(aName, aRace, aClass, aAllignment, aStrength, aDexterity,
 				 aConstitution, aIntelligence, aWisdom, aCharisma);
-	    listOfChars[numOfChars] = aCharacter;
+	    listOfChars.put(aName, aCharacter);
 	    numOfChars++;
 	    return numOfChars;
+	}
+	
+	public Character readName(String aName){
+		return listOfChars.get(aName);	
 	}
 
 }
