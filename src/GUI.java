@@ -291,7 +291,7 @@ public class GUI extends JFrame implements ActionListener
 			{
 				String charSearch = searchField.getText();
 				Character aName = theFactory.readName(charSearch);
-				JOptionPane.showMessageDialog(new JFrame(),"Character Name: "+ aName.getName());
+				JOptionPane.showMessageDialog(new JFrame(),"Name: "+ aName.getName() + "\nClass: " + aName.getCharClass());
 			}
 			catch(Exception aException)
 			{
